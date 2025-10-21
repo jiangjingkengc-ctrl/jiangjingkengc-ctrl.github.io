@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>資源代幣計算器｜模擬人生桌遊</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>資源代幣計算器</h1>
+    <div class="header-actions">
+      <button id="addPlayerBtn" class="btn primary">＋ 新增玩家</button>
+      <button id="exportBtn" class="btn">匯出紀錄</button>
+      <label class="import-label btn">
+        匯入紀錄<input id="importInput" type="file" accept="application/json" hidden />
+      </label>
+    </div>
+  </header>
+
+  <section class="controls">
+    <div class="group">
+      <label>每位玩家初始資源：</label>
+      <input id="initHealth" type="number" min="0" value="6" />
+      <span>健康</span>
+      <input id="initWealth" type="number" min="0" value="6" />
+      <span>財富</span>
+      <input id="initHappy" type="number" min="0" value="6" />
+      <span>幸福</span>
+      <button id="resetAllBtn" class="btn">重設全體</button>
+    </div>
+    <div class="group">
+      <button id="fullEventBtn" class="btn">全體事件（群體調整）</button>
+      <button id="nextTurnBtn" class="btn accent">下一回合 ▶</button>
+      <span class="turn-label">目前回合：<strong id="turnNum">1</strong></span>
+    </div>
+  </section>
+
+  <main>
+    <div id="players" class="players"></div>
+  </main>
+
+  <aside class="log">
+    <h3>事件紀錄</h3>
+    <ul id="logList"></ul>
+  </aside>
+
+  <!-- 全體事件對話框 -->
+  <dialog id="groupDialog">
+    <form method="dialog" class="dialog-form">
+      <h3>全體事件（一次性調整）</h3>
+      <div class="row">
+        <label>健康 Δ</label><input id="gHealth" type="number" value="0" />
+      </div>
+      <div class="row">
+        <label>財富 Δ</label><input id="gWealth" type="number" value="0" />
+      </div>
+      <div class="row">
+        <label>幸福 Δ</label><input id="gHappy" type="number" value="0" />
+      </div>
+      <div class="row">
+        <label>是否令所有玩家 <strong>失去 1 回合</strong>？</label>
+        <input id="gLoseTurn" type="checkbox" />
+      </div>
+      <div class="actions">
+        <button id="applyGroupBtn" class="btn primary" value="default">套用</button>
+        <button class="btn" value="cancel">取消</button>
+      </div>
+    </form>
+  </dialog>
+
+  <template id="playerCardTmpl">
+    <div class="player-card">
+      <div class="card-head">
+        <input class="player-name" placeholder="玩家名稱" />
+        <button class="remove btn-link" title="移除玩家">✕</button>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="label">健康</div>
+          <div class="value"><button class="minus">–</button><span class="num health">0</span><button class="plus">＋</button></div>
+        </div>
+        <div class="stat">
+          <div class="label">財富</div>
+          <div class="value"><button class="minus">–</button><span class="num wealth">0</span><button class="plus">＋</button></div>
+        </div>
+        <div class="stat">
+          <div class="label">幸福</div>
+          <div class="value"><button class="minus">–</button><span class="num happy">0</span><button class="plus">＋</button></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn small warn" data-action="loseTurn">失去 1 回合</button>
+        <button class="btn small" data-action="recover">狀態改善</button>
+        <button class="btn small" data-action="endanger">測試：進入危險/困境/低落</button>
+      </div>
+      <div class="status">
+        <span class="badge" data-badge="danger" hidden>危險狀態（健康）剩 <b class="ttl">2</b> 回合</span>
+        <span class="badge" data-badge="distress" hidden>困境狀態（財富）剩 <b class="ttl">2</b> 回合</span>
+        <span class="badge" data-badge="low" hidden>低落狀態（幸福）剩 <b class="ttl">2</b> 回合</span>
+        <span class="badge dead" data-badge="dead" hidden>⚑ 已死亡</span>
+        <span class="badge skip" data-badge="skip" hidden>將跳過 <b class="skipCount">1</b> 回合</span>
+      </div>
+    </div>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
